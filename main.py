@@ -14,12 +14,15 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
 
         results = holistic.process(image)
         
-        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-        mp_drawing.draw_landmarks(image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
+        res_image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        
+        # Right Hand Landmarks
+        mp_drawing.draw_landmarks(res_image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
+        
+        # Left Hand Landmarks
+        mp_drawing.draw_landmarks(res_image, results.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
 
-        mp_drawing.draw_landmarks(image, results.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS)
-
-        cv2.imshow('Hollistic Model Detection', image)
+        cv2.imshow('Hollistic Model Detection', res_image)
 
         if cv2.waitKey(10) & 0xFF == ord('q'):
             break
