@@ -27,7 +27,7 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
         
         draw_landmarks(res_image, results)
 
-        cv2.imshow('Hollistic Model Detection', res_image)
+        cv2.imshow('Sign Language Recognition', res_image)
 
         if cv2.waitKey(10) & 0xFF == ord('q'):
             break
