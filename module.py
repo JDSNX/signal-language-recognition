@@ -19,6 +19,8 @@ def mediapipe_detection(image, model):
 
 def prob_viz(res, actions, input_frame):  
     colors = [(245,117,16), (117,245,16), (16,117,245)]
+    input_frame = cv2.resize(input_frame, dsize=None, fx=1.4, fy=1.4)
+    input_frame = cv2.flip(input_frame, 1)
     output_frame = input_frame.copy()
     for num, prob in enumerate(res):
         cv2.rectangle(output_frame, (0,60+num*40), (int(prob*100), 90+num*40), colors[num], -1)
