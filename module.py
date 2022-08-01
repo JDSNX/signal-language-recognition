@@ -4,11 +4,6 @@ import os
 import numpy as np
 import csv
 
-
-from tensorflow.python.keras.models import Sequential
-from tensorflow.python.keras.layers import LSTM, Dense
-from tensorflow.python.keras.callbacks import TensorBoard
-
 mp_drawing = mp.solutions.drawing_utils
 mp_holistic = mp.solutions.holistic
 
@@ -55,20 +50,3 @@ def get_keywords():
     with open('./keywords.csv') as f:
         reader = csv.reader(f)
         return [col for row in reader for col in row]
-
-def build_network():
-    global X_train, X_test, y_train, y_test, model
-    log_dir = os.path.join('Logs')
-    tb_callback = TensorBoard(log_dir=log_dir)
-
-    model = Sequential()
-    model.add(LSTM(64, return_sequences=True, activation='relu', input_shape=(30,1662)))
-    model.add(LSTM(128, return_sequences=True, activation='relu'))
-    model.add(LSTM(64, return_sequences=False, activation='relu'))
-    model.add(Dense(64, activation='relu'))
-    model.add(Dense(32, activation='relu'))
-    model.add(Dense(actions.shape[0], activation='softmax'))
-    model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
-    model.fit(X_train, y_train, epochs=2000, callbacks=[tb_callback])
-    model.save('action.h5')
-    plot_model(model.summary(), to_file='model.png')

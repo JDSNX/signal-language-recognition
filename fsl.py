@@ -17,7 +17,7 @@ from tensorflow.python.keras.callbacks import TensorBoard
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-actions = get_keywords()
+actions = np.array(get_keywords())
 no_of_videos = 30 #no_sequence
 frames_of_video = 30 #sequence_length
 
@@ -29,7 +29,6 @@ for action in actions:
             pass
 
 cap = cv2.VideoCapture(0)
-
 
 def training_testing():
     with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
@@ -49,12 +48,12 @@ def training_testing():
                             cv2.putText(image, 'Video No.: {}'.format(video), (15,12), 
                                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
 
-                            cv2.imshow(str(action).capitalize(), image)
+                            cv2.imshow('Capture new words', image)
                             cv2.waitKey(1000)
                         else: 
-                            cv2.putText(image, 'Video No.: {}'.format(video), (15,12), 
+                            cv2.putText(image, '{} | Video No.: {}'.format(video), (15,12), 
                                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
-                            cv2.imshow(str(action).capitalize(), image)
+                            cv2.imshow('Capture new words', image)
 
                         keypoints = extract_keypoints(results)
                         npy_path = os.path.join(DATA_PATH, action, str(video), str(frame_num))
@@ -90,6 +89,7 @@ def preprocess_data():
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.05)    
     
 def build_network():
+    global X_train, X_test, y_train, y_test, model
     log_dir = os.path.join('Logs')
     tb_callback = TensorBoard(log_dir=log_dir)
 
@@ -103,9 +103,7 @@ def build_network():
     model.compile(optimizer='Adam', loss='categorical_crossentropy', metrics=['categorical_accuracy'])
     model.fit(X_train, y_train, epochs=2000, callbacks=[tb_callback])
     model.save('action.h5')
-    plot_model(model.summary(), to_file='model.png')
 
-    
 if __name__ == "__main__":
     global X_train, X_test, y_train, y_test
     training_testing()
