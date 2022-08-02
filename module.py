@@ -4,10 +4,16 @@ import os
 import numpy as np
 import csv
 
+from pathlib import Path
+
 mp_drawing = mp.solutions.drawing_utils
 mp_holistic = mp.solutions.holistic
 
-DATA_PATH = os.path.join('mediapipe_data')
+DATA_PATH = os.path.join('mediapipe_data1')
+KW_PATH = r'D:\keywords.csv'
+
+no_of_videos = 30 
+frames_of_video = 30
 
 def mediapipe_detection(image, model):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) 
@@ -49,6 +55,28 @@ def extract_keypoints(results):
     return np.concatenate([pose, face, lh, rh])
 
 def get_keywords():
-    with open('./keywords.csv') as f:
+    create_csv()
+    with open(KW_PATH) as f:
         reader = csv.reader(f)
-        return [col for row in reader for col in row]
+        return np.array([col for row in reader for col in row])
+
+def create_csv():
+    if not os.path.exists(KW_PATH):
+        fle = Path(KW_PATH)
+        fle.touch(exist_ok=True)
+        f = open(fle)
+        return False
+    return True
+
+def create_mp_data():
+    for action in get_keywords(): 
+        for video in range(no_of_videos):
+            try:
+                os.makedirs(os.path.join(DATA_PATH, action, str(video)))
+            except:
+                pass
+
+def init():
+    create_csv()
+    create_mp_data()
+    

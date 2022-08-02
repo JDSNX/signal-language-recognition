@@ -6,6 +6,8 @@ Usage:
     main.py run
     main.py train
     main.py new_word
+    main.py try1
+    main.py try2
     main.py -h | --help
     main.py --version
 
@@ -31,21 +33,13 @@ from tensorflow.python.keras.callbacks import TensorBoard
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-actions = np.array(get_keywords())
-no_of_videos = 30 
-frames_of_video = 30
+init()
 
-for action in actions: 
-    for video in range(no_of_videos):
-        try:
-            os.makedirs(os.path.join(DATA_PATH, action, str(video)))
-        except:
-            pass
+actions = np.array(get_keywords())
 
 cap = cv2.VideoCapture(0)
 
 def training_testing():
-    os.system('cls')
     with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
         for action in actions:
             if get_size(action) == 0:
@@ -87,7 +81,6 @@ def training_testing():
     cv2.destroyAllWindows()
 
 def preprocess_data():
-    os.system('cls')
     label_map = {label:num for num, label in enumerate(actions)}
     log_dir = os.path.join('Logs')
     tb_callback = TensorBoard(log_dir=log_dir)
@@ -121,7 +114,6 @@ def preprocess_data():
     model.save('model.h5')    
 
 def main():
-    os.system('cls')
     model = load_model('model.h5')
 
     sequence = []
@@ -168,8 +160,18 @@ def main():
         cap.release()
         cv2.destroyAllWindows()
 
+def try1():
+    os.startfile('notepad')
+    pass
+
+def try2():
+    os.startfile('spotify')
+    pass
+
 def run_cli():
     args = docopt(__doc__, version='Sign Language Recognition v1.00.0')
+
+    os.system('cls')
 
     if args['run']:
         main()
@@ -179,6 +181,12 @@ def run_cli():
 
     elif args['new_word']:
         training_testing()
+
+    elif args['try1']:
+        try1()
+
+    elif args['try2']:
+        try2()
 
 if __name__ == "__main__":
     run_cli()
