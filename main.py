@@ -160,14 +160,6 @@ def main():
         cap.release()
         cv2.destroyAllWindows()
 
-def try1():
-    os.startfile('notepad')
-    pass
-
-def try2():
-    os.startfile('spotify')
-    pass
-
 def run_cli():
     args = docopt(__doc__, version='Sign Language Recognition v1.00.0')
 
@@ -181,12 +173,6 @@ def run_cli():
 
     elif args['new_word']:
         training_testing()
-
-    elif args['try1']:
-        try1()
-
-    elif args['try2']:
-        try2()
-
+        
 if __name__ == "__main__":
     run_cli()
